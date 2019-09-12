@@ -16,7 +16,6 @@ Scrapped data : 'author', 'content', 'description', 'publishedAt', 'source', 'ti
 
 
 # 3rd step :
-Face recognition phase where we try to identify trumps face through 'urlToImage' 
-https://github.com/ageitgey/face_recognition
+Face recognition phase where we try to identify trumps face through 'urlToImage' using this library https://github.com/ageitgey/face_recognition
 
 
