@@ -17,7 +17,7 @@ for np in left:
     url = ('https://newsapi.org/v2/everything?'       
                'q=Trump&'
                'sources='+np+'&'
-               'from=2019-08-12&'
+               'from='+str(start)+'&'
                'sortBy=popularity&'
         
                'apiKey=edaad03f1de6469bb5f1b27b5ac8433d')
@@ -32,7 +32,7 @@ for np in left:
     url = ('https://newsapi.org/v2/everything?'       
                'q=Trump&'
                'sources='+np+'&'
-               'from=2019-08-12&'
+               'from='+str(start)+'&'
                'sortBy=popularity&'
         
                'apiKey=edaad03f1de6469bb5f1b27b5ac8433d')
