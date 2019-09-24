@@ -1,3 +1,5 @@
+#install python 3.6
+#using cmd :
 #pip install CMake
 #install dlib package using the link for windows users
 #https://github.com/charlielito/install-dlib-python-windows
