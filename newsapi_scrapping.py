@@ -1,10 +1,13 @@
 import pandas as pd 
 import requests
 import datetime
+import configparser
 
 #maximum 10 days from current date or upgrade to premium
 today = datetime.date.today()
 start = today - datetime.timedelta(days=10)
+config = configparser.ConfigParser()
+config.read('config.ini')
 
 #last two are left centered 
 left = ['msnbc','the-huffington-post','cnn','mashable','new-york-magazine', 'mirror','abc-news', 'vice-news']
@@ -20,7 +23,7 @@ for np in left:
                'from='+str(start)+'&'
                'sortBy=popularity&'
         
-               'apiKey=edaad03f1de6469bb5f1b27b5ac8433d')
+               'apiKey=str(config['key']')
     response = requests.get(url)
     response = response.json()
     df_left=df_left.append(pd.DataFrame(response['articles']),ignore_index=True)
