@@ -23,7 +23,7 @@ for np in left:
                'from='+str(start)+'&'
                'sortBy=popularity&'
         
-               'apiKey=str(config['key']')
+               'apiKey=str(config['key'])')
     response = requests.get(url)
     response = response.json()
     df_left=df_left.append(pd.DataFrame(response['articles']),ignore_index=True)
@@ -38,7 +38,7 @@ for np in left:
                'from='+str(start)+'&'
                'sortBy=popularity&'
         
-               'apiKey=edaad03f1de6469bb5f1b27b5ac8433d')
+               'apiKey=str(config['key'])')
     response = requests.get(url)
     response = response.json()
     df_right=df_right.append(pd.DataFrame(response['articles']),ignore_index=True)
