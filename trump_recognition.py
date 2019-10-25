@@ -37,5 +37,8 @@ for i in range(len(ns.df_left)):
         else:
             ns.df_left['trump_image']= 'no face' 
 
+df_left_trump = ns.df_left
+print (df_left_trump)
+
 
 
