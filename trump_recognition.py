@@ -27,7 +27,7 @@ for i in range(len(ns.df_left)):
         unknown_image = face_recognition.load_image_file(str(i)+'.jpg')
         unknown_encoding = face_recognition.face_encodings(unknown_image)
         if len(unknown_encoding) > 0:
-            unknown_encoding = unknown_encodings[0]
+            unknown_encoding = unknown_encoding[0]
             results = face_recognition.compare_faces([biden_encoding], unknown_encoding)
             print(results)
         else:
