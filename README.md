@@ -19,4 +19,5 @@ Scrapped data : 'author', 'content', 'description', 'publishedAt', 'source', 'ti
 Face recognition phase where we try to identify trumps face through 'urlToImage' using this library https://github.com/ageitgey/face_recognition
 
 Installation on linux : https://github.com/cftang0827/python-computer-vision-environment-setting
+pip install openpyxl
 
