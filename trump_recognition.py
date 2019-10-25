@@ -24,7 +24,7 @@ for i in range(len(ns.df_left)):
         pass
     else:    
         img = downloader(ns.df_left['urlToImage'][i],i)
-        unknown_image = face_recognition.load_image_file(i+'.jpg')
+        unknown_image = face_recognition.load_image_file(str(i+'.jpg'))
         unknown_encoding = face_recognition.face_encodings(unknown_image)
         if len(unknown_encoding) > 0:
             unknown_encoding = unknown_encodings[0]
