@@ -42,4 +42,5 @@ print (df_left_trump)
 
 
 print(df_left_trump['trump_image'].value_counts(normalize=True) * 100)
-df_left_trump.to_excel(table.xlsx, index=False)
+df_left_trump.to_excel("table.xlsx", index=False)
+
