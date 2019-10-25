@@ -19,9 +19,9 @@ def downloader(image_url,file_name):
 
 for i in range(len(ns.df_left)):
     if print(str(ns.df_left['urlToImage'][i])) == 'None': 
-        ns.df_left['trump_image']= 'not readable'  
+        ns.df_left.loc[i, 'trump_image'] = "not readable"
     elif ns.df_left['urlToImage'][i]== None :
-        ns.df_left['trump_image']= 'not readable' 
+        ns.df_left.loc[i, 'trump_image'] = "not readable"
     else:    
         img = downloader(ns.df_left['urlToImage'][i],i)
         unknown_image = face_recognition.load_image_file(str(i)+'.jpg')
@@ -31,11 +31,11 @@ for i in range(len(ns.df_left)):
             results = face_recognition.compare_faces([biden_encoding], unknown_encoding)
             print(results)
             if results :
-                ns.df_left['trump_image'][i]= 'trump'  
+                ns.df_left.loc[i, 'trump_image'] ='trump'  
             else :
-                ns.df_left['trump_image'][i]= 'not trump'  
+                ns.df_left.loc[i, 'trump_image'] = 'not trump'  
         else:
-            ns.df_left['trump_image'][i]= 'no face' 
+            ns.df_left.loc[i, 'trump_image'] = 'no face' 
 
 df_left_trump = ns.df_left
 print (df_left_trump)
