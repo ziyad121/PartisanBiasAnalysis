@@ -18,7 +18,7 @@ def downloader(image_url,file_name):
 #    elif ns.df_left['urlToImage'][i]== None :
 #        i= i + 1
 #    else:    
-img = downloader(ns.df_left['urlToImage'][15],15)
+img = downloader(ns.df_left['urlToImage'][16],16)
 
 known_image = face_recognition.load_image_file("trump.jpg")
 unknown_image = face_recognition.load_image_file("1.jpg")
@@ -26,7 +26,13 @@ unknown_image = face_recognition.load_image_file("1.jpg")
 biden_encoding = face_recognition.face_encodings(known_image)[0]
 unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
 
-results = face_recognition.compare_faces([biden_encoding], unknown_encoding)
+if len(unknown_encodings) > 0:
+    results = face_recognition.compare_faces([biden_encoding], unknown_encoding)
+else:
+   print("No faces found in the image!")
+   quit()
+
+
 
 
 print(results)
