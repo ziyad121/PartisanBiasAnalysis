@@ -31,11 +31,11 @@ for i in range(len(ns.df_left)):
             results = face_recognition.compare_faces([biden_encoding], unknown_encoding)
             print(results)
             if results :
-                ns.df_left['trump_image']= 'trump'  
+                ns.df_left['trump_image'][i]= 'trump'  
             else :
-                ns.df_left['trump_image']= 'not trump'  
+                ns.df_left['trump_image'][i]= 'not trump'  
         else:
-            ns.df_left['trump_image']= 'no face' 
+            ns.df_left['trump_image'][i]= 'no face' 
 
 df_left_trump = ns.df_left
 print (df_left_trump)
