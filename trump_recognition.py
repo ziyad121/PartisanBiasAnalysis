@@ -8,7 +8,8 @@ if not os.path.exists('images'):
 
 def downloader(image_url,file_name):
     full_file_name = str(file_name) + '.jpg'
-    full = os.path.join(os.getcwd()+'/images/', full_file_name )
+    #full = os.path.join(os.getcwd()+'/images/', full_file_name)
+    full = os.path.join(os.getcwd(), full_file_name )
     urllib.request.urlretrieve(image_url,full)
 
 #for i in range(len(ns.df_left)):
@@ -29,4 +30,5 @@ results = face_recognition.compare_faces([biden_encoding], unknown_encoding)
 
 
 print(results)
+
 
