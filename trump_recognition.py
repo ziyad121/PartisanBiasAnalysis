@@ -41,4 +41,4 @@ df_left_trump = ns.df_left
 print (df_left_trump)
 
 
-
+print(df['trump_image'].value_counts(normalize=True) * 100)
