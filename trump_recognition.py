@@ -18,7 +18,7 @@ def downloader(image_url,file_name):
 #    elif ns.df_left['urlToImage'][i]== None :
 #        i= i + 1
 #    else:    
-img = downloader(ns.df_left['urlToImage'][1],1)
+img = downloader(ns.df_left['urlToImage'][15],15)
 
 known_image = face_recognition.load_image_file("trump.jpg")
 unknown_image = face_recognition.load_image_file("1.jpg")
