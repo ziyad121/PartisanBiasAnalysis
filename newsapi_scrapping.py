@@ -10,7 +10,7 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 #last two are left centered 
-left = ['msnbc','the-huffington-post','cnn','mashable','new-york-magazine', 'mirror','abc-news', 'vice-news']
+left = ['msnbc','the-huffington-post','cnn','mashable','new-york-magazine','abc-news', 'vice-news']
 
 right = ['the-telegraph','national-review','daily-mail','fox-news','breitbart-news','the-american-conservative']
 df_left = pd.DataFrame()
