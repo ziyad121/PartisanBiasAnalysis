@@ -1,44 +1,31 @@
-import requests
-import urllib
-import re
-from bs4 import BeautifulSoup
-from requests_oauthlib import OAuth1
+import tweepy
 import pandas as pd 
+####input your credentials here
+consumer_key = 'tiaxyvHY2oorqfb7U26YieQ3I'
+consumer_secret = 'G5TuEa0j4GIH9ovSK1sOVaBVmQMoLca3YicAu6LZ9uYqLxzFAL'
+access_token = '1144220830303490048-9X1lHxQ5CKNFgqgZ0MGg8rLYUTDt71'
+access_token_secret = 'ltYy2vVgxJ98E2h51Yz2V8sJYu0lkR4AMhFet91P52bbw'
 
-#Variables that contains the user credentials to access Twitter API 
-#consumer_key = 'r70WuTxeCRVweMVdqz6DONg72'
-#consumer_secret = '5NLhmrWdqjzh7TmJ4LLD16WBM38QKNtoHtSVO7TlosQ372DHnc'
-#access_token = '708300857163567104-buOrNINky34zMftRwcKSJ2BvKF2cmYK'
-#access_token_secret = 'koHzhZYDCIU32tE27g3B9E6Mr8c9fZNgDdoOXk2XqHijr'
-
-auth_params = {
-    'app_key':'r70WuTxeCRVweMVdqz6DONg72',
-    'app_secret':'5NLhmrWdqjzh7TmJ4LLD16WBM38QKNtoHtSVO7TlosQ372DHnc',
-    'oauth_token':'708300857163567104-buOrNINky34zMftRwcKSJ2BvKF2cmYK',
-    'oauth_token_secret':'koHzhZYDCIU32tE27g3B9E6Mr8c9fZNgDdoOXk2XqHijr'
-}
-
-# Creating an OAuth Client connection
-auth = OAuth1 (
-    auth_params['app_key'],
-    auth_params['app_secret'],
-    auth_params['oauth_token'],
-    auth_params['oauth_token_secret']
-)
-
-df = pd.read_excel(open('table.xlsx','rb'), sheet_name='Sheet1')
-url_rest = "https://api.twitter.com/1.1/search/tweets.json"
-# getting rid of retweets in the extraction results and filtering all replies to the tweet often uncessary for the analysis
-
-q = 'http://www.msnbc.com/rachel-maddow-show/trump-doesnt-seem-realize-he-was-outmaneuvered-mideast-deal'
-params = {'q': q, 'count': 100, 'lang': 'en',  'result_type': 'recent'}
-results = requests.get(url_rest, params=params, auth=auth)
-tweets = results.json()
-messages = [BeautifulSoup(tweet['text'], 'html5lib').get_text() for tweet in tweets['statuses']]
-
-
-url_rest = "https://api.twitter.com/1.1/search/tweets.json"
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
+api = tweepy.API(auth,wait_on_rate_limit=True)
+#####United Airlines
+df = pd.read_excel(open('table_left.xlsx','rb'), sheet_name='Sheet1')
 y = []
+# getting rid of retweets in the extraction results and filtering all replies to the tweet often uncessary for the analysis
+for i in range(len(df)):
+    lt= []
+    a= str(df['url'][i])    
+    for tweet in tweepy.Cursor(api.search,q=a, count=20,
+                                   lang="en",
+                                   since="2017-04-03").items(): 
+        lt.append(tweet.text)
+    y.append(lt)
+    print(i)
+
+
+df['tweets']=y
+
 # getting rid of retweets in the extraction results and filtering all replies to the tweet often uncessary for the analysis
 for i in range(len(df)):
     q= str(df['url'][i])
