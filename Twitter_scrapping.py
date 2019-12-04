@@ -1,3 +1,54 @@
+import pandas as pd 
+import requests
+import datetime
+import configparser
+
+#maximum 10 days from current date or upgrade to premium
+today = datetime.date.today()
+start = today - datetime.timedelta(days=10)
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+#last two are left centered 
+left = ['msnbc','the-huffington-post','cnn','mashable','new-york-magazine','abc-news', 'vice-news']
+
+#'the-telegraph' and 'daily-mail'are no longer supported
+right = ['national-review','fox-news','breitbart-news','the-american-conservative']
+
+df_left = pd.DataFrame()
+df_right = pd.DataFrame()
+
+for np in left:
+    
+    url = ('https://newsapi.org/v2/everything?'       
+               'q=Trump&'
+               'sources='+np+'&'
+               'from='+str(start)+'&'
+               'sortBy=popularity&'
+        
+               'apiKey'+'='+str(config['DEFAULT']['key']))
+    response = requests.get(url)
+    response = response.json()
+    df_left=df_left.append(pd.DataFrame(response['articles']),ignore_index=True)
+print(df_left)
+
+for np in right:
+    
+    url = ('https://newsapi.org/v2/everything?'       
+               'q=Trump&'
+               'sources='+np+'&'
+               'from='+str(start)+'&'
+               'sortBy=popularity&'
+        
+               'apiKey'+'='+str(config['DEFAULT']['key']))
+    response = requests.get(url)
+    response = response.json()
+    df_right=df_right.append(pd.DataFrame(response['articles']),ignore_index=True)
+
+print(df_right)
+
+#---------------------------------------
+import re
 import tweepy
 import pandas as pd 
 ####input your credentials here
@@ -9,30 +60,159 @@ access_token_secret = 'ltYy2vVgxJ98E2h51Yz2V8sJYu0lkR4AMhFet91P52bbw'
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth,wait_on_rate_limit=True)
-#####United Airlines
-df = pd.read_excel(open('table_left.xlsx','rb'), sheet_name='Sheet1')
+
+
 y = []
-# getting rid of retweets in the extraction results and filtering all replies to the tweet often uncessary for the analysis
-for i in range(len(df)):
+
+for i in range(len(df_left)):
     lt= []
-    a= str(df['url'][i])    
-    for tweet in tweepy.Cursor(api.search,q=a, count=20,
-                                   lang="en",
-                                   since="2017-04-03").items(): 
-        lt.append(tweet.text)
-    y.append(lt)
-    print(i)
+    a= str(df_left['url'][i])    
+    results = api.search(q=a, lang="en", count=20, tweet_mode='extended')
+    for tweet in results: 
+        var = ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)"," ",tweet.full_text).split())
+        lt.append(var)
+    y.append(list(set(lt)))
+    print(i)    
+df_left['tweets']=y
+
+#---------------------------------------
+z=[]
+for j in range(len(df_right)):
+    bt= []
+    a= str(df_right['url'][j])    
+    results = api.search(q=a, lang="en", count=20, tweet_mode='extended')
+    for tweet in results: 
+        var = ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)"," ",tweet.full_text).split())
+        bt.append(var)
+    z.append(list(set(bt)))
+    print(j)
+
+df_right['tweets']=z
 
 
-df['tweets']=y
 
-# getting rid of retweets in the extraction results and filtering all replies to the tweet often uncessary for the analysis
-for i in range(len(df)):
-    q= str(df['url'][i])
-    params = {'q': q, 'count': 100, 'lang': 'en',  'result_type': 'recent' , 'tweet_mode':'extended'}
-    results = requests.get(url_rest, params=params, auth=auth)
-    tweets = results.json()
-    messages = [BeautifulSoup(tweet['full_text'], 'html5lib').get_text() for tweet in tweets['statuses']]
-    for i in range(len(messages)):
-        messages[i] = ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)"," ",messages[i]).split())
-    y.append(list(set(messages)))
+#---------------------------------------------------------------------
+
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+import pandas as pd
+import numpy as np
+
+
+
+analyzer = SentimentIntensityAnalyzer()
+
+
+df_left['pos'] = np.nan
+df_left['neg'] = np.nan
+df_left['neu'] = np.nan
+df_left['compound'] = np.nan
+#df_left['pos_average'] = np.nan
+#df_left['neg_average'] = np.nan
+#df_left['neu_average'] = np.nan
+df_left['compound_average'] = np.nan
+df_left['flag'] = np.nan
+
+#posg=[]
+#negg=[]
+#neug=[]
+compg=[]
+flagg=[]
+for i in range(len(df_left['tweets'])):
+    pos=[]
+    neg=[]
+    neu=[]
+    comp=[]
+    for j in range(len(df_left['tweets'][i])):
+        # calculate the senti-index for each advert text
+        tempRespond = analyzer.polarity_scores(df_left['tweets'][i][j])   
+        pos.append(tempRespond['pos'])
+        neg.append(tempRespond['neg'])
+        neu.append(tempRespond['neu'])
+        comp.append(tempRespond['compound'])
+#    posg.append(pos)
+#    negg.append(neg)
+#    neug.append(neu)
+    compg.append(comp)
+
+#df_left['pos'] = posg
+#df_left['neg'] = negg
+#df_left['neu'] = neug
+df_left['compound'] = compg
+
+#-----------------------------------------------------------------
+def Average(lst): 
+    if len(lst)==0:
+        return 0
+    else : return sum(lst) / len(lst) 
+
+for av in range(len(df_left)):
+    df_left['compound_average'][av]= Average(df_left['compound'][av])
+    if 0.5 <= df_left['compound_average'][av]  and df_left['compound_average'][av] <= 1:
+        flagg.append('positive')
+    elif -0.5 < df_left['compound_average'][av]  and df_left['compound_average'][av] < 0.5:
+        flagg.append('neutral') 
+    else:
+        flagg.append('negative')
+        
+df_left['flag']= flagg
+ 
+#df_left=df_left.drop(['neu_average', 'neg_average','pos_average'], axis=1)
+df_left=df_left.drop(['author','source', 'content', 'publishedAt'], axis=1)
+df_left.to_excel('outputleft6-12.xlsx')
+
+#-------------------------------------------------------------------
+
+df_right['pos'] = np.nan
+df_right['neg'] = np.nan
+df_right['neu'] = np.nan
+df_right['compound'] = np.nan
+#df_left['pos_average'] = np.nan
+#df_left['neg_average'] = np.nan
+#df_left['neu_average'] = np.nan
+df_right['compound_average'] = np.nan
+df_right['flag'] = np.nan
+
+#posg=[]
+#negg=[]
+#neug=[]
+compg=[]
+flagg=[]
+for i in range(len(df_right['tweets'])):
+    pos=[]
+    neg=[]
+    neu=[]
+    comp=[]
+    for j in range(len(df_right['tweets'][i])):
+        # calculate the senti-index for each advert text
+        tempRespond = analyzer.polarity_scores(df_right['tweets'][i][j])   
+        pos.append(tempRespond['pos'])
+        neg.append(tempRespond['neg'])
+        neu.append(tempRespond['neu'])
+        comp.append(tempRespond['compound'])
+#    posg.append(pos)
+#    negg.append(neg)
+#    neug.append(neu)
+    compg.append(comp)
+
+#df_left['pos'] = posg
+#df_left['neg'] = negg
+#df_left['neu'] = neug
+df_right['compound'] = compg
+
+#-----------------------------------------------------------------
+
+
+for av in range(len(df_right)):
+    df_right['compound_average'][av]= Average(df_right['compound'][av])
+    if 0.5 <= df_right['compound_average'][av]  and df_right['compound_average'][av] <= 1:
+        flagg.append('positive')
+    elif -0.5 < df_right['compound_average'][av]  and df_right['compound_average'][av] < 0.5:
+        flagg.append('neutral') 
+    else:
+        flagg.append('negative')
+        
+df_right['flag']= flagg
+ 
+#df_left=df_left.drop(['neu_average', 'neg_average','pos_average'], axis=1)
+df_right=df_right.drop(['author', 'source','content', 'publishedAt'], axis=1)
+df_right.to_excel('outputright6-12.xlsx')
