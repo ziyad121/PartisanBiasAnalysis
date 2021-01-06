@@ -21,3 +21,12 @@ Face recognition phase where we try to identify trumps face through 'urlToImage'
 Installation on linux : https://github.com/cftang0827/python-computer-vision-environment-setting
 pip install openpyxl
 
+# 4th step :
+Scraping the tweets related to scraped news and application of Sentiment analysis of the comments, and categorize the comments based on entity
+linker 
+
+tweet scraper : https://github.com/lschmelzeisen/nasty 
+
+
+------------------------------------------------------------------------------
+Checkout the data.csv file for results
