@@ -26,7 +26,9 @@ Scraping the tweets related to scraped news and application of Sentiment analysi
 linker 
 
 tweet scraper : https://github.com/lschmelzeisen/nasty 
+Sentiment detection: https://github.com/cjhutto/vaderSentiment
 
 
-------------------------------------------------------------------------------
 Checkout the data.csv file for results
+
+
