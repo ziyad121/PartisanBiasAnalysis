@@ -2,7 +2,7 @@
 
 Identifying Partisan Affect Online with Visual Semantic Embedding by conducting sentiment analysis of tweets' comments related to biased news about Donald Trump.
 
-![Screenshot](newspaper_bias.pjg)
+![Screenshot](newspaper_bias.jpg)
 # 1st step : 
 
 Identifying the top left, and top  right news websites using MediaBiasChart and checked whether they are considered as sources for the news API: https://newsapi.org/sources.
